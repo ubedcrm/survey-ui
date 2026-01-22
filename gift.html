@@ -5,11 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Claim Gift</title>
 
-  <!-- CSS GLOBAL WEB -->
+  <!-- CSS GLOBAL -->
   <link rel="stylesheet" href="https://ubedcrm.github.io/survey-ui/css/style.css">
 
   <!-- STYLE KHUSUS FORM -->
   <style>
+    body {
+      background: #f8f8f8;
+    }
+
     .survey-wrapper {
       max-width: 420px;
       margin: 60px auto;
@@ -64,7 +68,7 @@
       opacity: .9;
     }
 
-    /* NOTIF */
+    /* NOTIFIKASI */
     #notif {
       position: fixed;
       top: 20px;
@@ -107,7 +111,7 @@
     </nav>
   </header>
 
-  <!-- FORM SURVEY -->
+  <!-- FORM -->
   <div class="survey-wrapper">
     <h2>Claim Gift 🎁</h2>
     <p>Isi survey singkat untuk mendapatkan hadiah dari kami</p>
@@ -153,7 +157,7 @@
 
   <div id="notif"></div>
 
-  <!-- SCRIPT (LOGIC LAMA TETAP) -->
+  <!-- SCRIPT -->
   <script>
     const form = document.getElementById("giftForm");
     const notif = document.getElementById("notif");
@@ -174,6 +178,11 @@
         if (res.status === "success") {
           showNotif(res.message || "Survey berhasil dikirim 🎉", "success");
           form.reset();
+
+          // AUTO REDIRECT KE THANK YOU PAGE
+          setTimeout(() => {
+            window.location.href = "https://ubedcrm.github.io/survey-ui/thankyou.html";
+          }, 1500);
         } else {
           showNotif(res.message || "Gagal mengirim survey", "error");
         }
@@ -187,7 +196,7 @@
       notif.textContent = msg;
       notif.className = type;
       notif.style.display = "block";
-      setTimeout(() => notif.style.display = "none", 3500);
+      setTimeout(() => notif.style.display = "none", 3000);
     }
   </script>
 

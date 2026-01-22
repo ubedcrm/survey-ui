@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claim Gift | paddy.id</title>
+<style>
+:root {
+  --pink: #ff5ca8;
+  --bg: #f8f8f8;
+}
+
+body {
+  margin:0; background:var(--bg); font-family: Arial, sans-serif;
+}
+
+.container {
+  max-width:400px;
+  margin:40px auto;
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,.1);
+}
+
+h2 {
+  text-align:center;
+  color: var(--pink);
+}
+
+form input, form select, form button {
+  width:100%;
+  margin-bottom:12px;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-size:14px;
+}
+
+form button {
+  background:var(--pink);
+  color:white;
+  border:none;
+  cursor:pointer;
+  font-weight:bold;
+  transition: background .2s;
+}
+
+form button:hover {
+  background:#e754a3;
+}
+
+/* POPUP NOTIFIKASI */
+#notif {
+  position: fixed;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:white;
+  padding:12px 20px;
+  border-radius:12px;
+  box-shadow:0 4px 16px rgba(0,0,0,.2);
+  display:none;
+  font-weight:bold;
+  z-index:999;
+  text-align:center;
+}
+#notif.success {color:green; border:2px solid green;}
+#notif.error {color:red; border:2px solid red;}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Claim Gift 🎁</h2>
+  <form id="giftForm">
+    <input type="text" name="nama" placeholder="Nama" required>
+    <input type="tel" name="hp" placeholder="No HP" required>
+    <input type="text" name="alamat" placeholder="Alamat" required>
+    
+    <label>Kepuasan Produk (1-5):</label>
+    <select name="kepuasan_produk" required>
+      <option value="">Pilih</option>
+      <option value="5">5 - Sangat Puas</option>
+      <option value="4">4 - Puas</option>
+      <option value="3">3 - Cukup</option>
+      <option value="2">2 - Kurang</option>
+      <option value="1">1 - Sangat Kurang</option>
+    </select>
+    
+    <label>Layanan CS (1-5):</label>
+    <select name="layanan_cs" required>
+      <option value="">Pilih</option>
+      <option value="5">5 - Sangat Baik</option>
+      <option value="4">4 - Baik</option>
+      <option value="3">3 - Cukup</option>
+      <option value="2">2 - Kurang</option>
+      <option value="1">1 - Sangat Kurang</option>
+    </select>
+    
+    <label>Layanan WA (1-5):</label>
+    <select name="layanan_wa" required>
+      <option value="">Pilih</option>
+      <option value="5">5 - Sangat Baik</option>
+      <option value="4">4 - Baik</option>
+      <option value="3">3 - Cukup</option>
+      <option value="2">2 - Kurang</option>
+      <option value="1">1 - Sangat Kurang</option>
+    </select>
+    
+    <button type="submit">Claim Gift</button>
+  </form>
+</div>
+
+<div id="notif"></div>
+
+<script>
+const form = document.getElementById("giftForm");
+const notif = document.getElementById("notif");
+
+form.addEventListener("submit", e => {
+  e.preventDefault();
+  
+  const data = new FormData(form);
+  const params = new URLSearchParams();
+  for(let pair of data) params.append(pair[0], pair[1]);
+
+  fetch("https://script.google.com/macros/s/AKfycbykkMnmYEaD1-sVQWpMgBRyxapVrl88ykFwqw1N_xF8_iUmMJCiNtJj7TwbxbjZBaZ4XA/exec", {
+    method:"POST",
+    body: params
+  })
+  .then(res => res.json())
+  .then(res => {
+    if(res.status === "success"){
+      showNotif(res.message, "success");
+      form.reset();
+    } else {
+      showNotif(res.message, "error");
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    showNotif("Terjadi error, coba lagi nanti", "error");
+  });
+});
+
+function showNotif(msg, type){
+  notif.textContent = msg;
+  notif.className = type;
+  notif.style.display = "block";
+  setTimeout(() => { notif.style.display = "none"; }, 3500);
+}
+</script>
+
+</body>
+</html>

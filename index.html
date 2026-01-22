@@ -1,223 +1,71 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>paddy.id | Official Store</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Store</title>
 
-<style>
-  :root {
-    --pink: #ff5ca8;
-    --dark: #333;
-    --light: #fff;
-  }
-
-  body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: #fff;
-    color: var(--dark);
-  }
-
-  /* ===== HEADER ===== */
-  header {
-    position: sticky;
-    top:0;
-    background:#fff;
-    padding:14px 18px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    box-shadow:0 2px 10px rgba(0,0,0,.08);
-    z-index:999;
-  }
-  .logo{font-size:20px; font-weight:bold; color:var(--pink);}
-  nav a{
-    margin-left:14px;
-    text-decoration:none;
-    font-size:14px;
-    color:var(--dark);
-  }
-  nav a.primary{
-    background:var(--pink);
-    color:#fff;
-    padding:6px 14px;
-    border-radius:20px;
-  }
-
-  /* ===== HERO ===== */
-  .hero{
-    padding:60px 20px;
-    text-align:center;
-    background:linear-gradient(135deg,#ffe4f1,#fff);
-  }
-  .hero h1{font-size:28px; margin-bottom:10px;}
-  .hero p{font-size:15px; margin-bottom:28px; color:#555;}
-  .hero .btn{
-    display:inline-block;
-    margin:6px;
-    padding:12px 22px;
-    background:var(--pink);
-    color:#fff;
-    border-radius:30px;
-    text-decoration:none;
-    font-size:14px;
-  }
-  .hero .btn.outline{
-    background:#fff;
-    color:var(--pink);
-    border:2px solid var(--pink);
-  }
-
-  /* ===== FEATURES ===== */
-  .features{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-    gap:20px;
-    padding:40px 20px;
-  }
-  .feature{
-    background:#fff;
-    border-radius:16px;
-    padding:20px;
-    box-shadow:0 6px 16px rgba(0,0,0,.06);
-    text-align:center;
-  }
-  .feature h3{margin-bottom:6px; font-size:16px;}
-  .feature p{font-size:13px; color:#666;}
-
-  /* ===== FOOTER ===== */
-  footer{
-    text-align:center;
-    padding:20px;
-    font-size:13px;
-    color:#777;
-    background:#fafafa;
-  }
-
-  /* ===== FLOATING CUSTOMER CARE ===== */
-  .customer-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 9999;
-  }
-
-  .customer-btn {
-    background: var(--pink);
-    color: #fff;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:28px;
-    border:none;
-    cursor:pointer;
-    box-shadow:0 6px 16px rgba(0,0,0,0.2);
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0% {transform: scale(1);}
-    50% {transform: scale(1.1);}
-    100% {transform: scale(1);}
-  }
-
-  .customer-popup {
-    position: absolute;
-    bottom: 70px;
-    right: 0;
-    background:#fff;
-    padding:10px;
-    border-radius:12px;
-    box-shadow:0 6px 16px rgba(0,0,0,0.2);
-    display:flex;
-    flex-direction: column;
-    gap: 10px;
-    min-width: 150px;
-    opacity: 0;
-    transform: translateY(20px);
-    pointer-events: none;
-    transition: 0.3s;
-  }
-
-  .customer-popup.show {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-  }
-
-  .customer-popup a {
-    text-decoration:none;
-    background: var(--pink);
-    color:#fff;
-    padding:8px;
-    border-radius:8px;
-    font-size:14px;
-    text-align:center;
-  }
-
-  .customer-popup a.instagram {background:#E1306C;}
-
-  @media (max-width:480px){
-    .customer-btn{width:50px;height:50px;font-size:24px;}
-  }
-</style>
+  <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
 
-<header>
-  <div class="logo">paddy.id</div>
-  <nav>
-    <a href="products.html">Produk</a>
-    <a href="store.html">Store</a>
-    <a href="gift.html" class="primary">Claim Gift</a>
-  </nav>
-</header>
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="logo">STORE</div>
+    <nav>
+      <a href="index.html" class="active">Home</a>
+      <a href="products.html">Products</a>
+      <a href="gift.html">Claim Gift</a>
+    </nav>
+  </header>
 
-<section class="hero">
-  <h1>Hello, Paddy Besties! 💖</h1>
-  <p>Welcome to Paddy's Official Website</p>
+  <!-- HERO / BANNER -->
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Belanja Mudah & Cepat</h1>
+      <p>Produk pilihan dengan kualitas terbaik untuk kebutuhan harianmu</p>
+      <a href="products.html" class="btn">Lihat Produk</a>
+    </div>
+  </section>
 
-  <a href="products.html" class="btn">🛍️ Lihat Produk</a>
-  <a href="store.html" class="btn outline">🏬 Store</a>
-  <a href="gift.html" class="btn outline">🎁 Claim Free Gift</a>
-</section>
+  <!-- PRODUCT GRID -->
+  <section class="products">
+    <h2>Produk Terlaris</h2>
 
-<section class="features">
-  <div class="feature">
-    <h3>✨ Produk Original</h3>
-    <p>Produk resmi dan berkualitas terbaik</p>
-  </div>
-  <div class="feature">
-    <h3>🚚 Pengiriman Cepat</h3>
-    <p>Diproses setiap hari kerja</p>
-  </div>
-  <div class="feature">
-    <h3>💬 Customer Care</h3>
-    <p>Siap bantu via WhatsApp & Instagram</p>
-  </div>
-</section>
+    <div class="product-grid">
 
-<footer>© 2026 paddy.id • All rights reserved</footer>
+      <div class="product-card">
+        <img src="images/product-1.jpg" alt="Product">
+        <h3>Produk A</h3>
+        <p class="price">Rp 99.000</p>
+      </div>
 
-<!-- FLOATING CUSTOMER CARE -->
-<div class="customer-container">
-  <button class="customer-btn">💬</button>
-  <div class="customer-popup">
-    <a href="https://wa.me/6282130333125" target="_blank">WhatsApp</a>
-    <a href="https://instagram.com/paddy.id" target="_blank" class="instagram">Instagram</a>
-  </div>
-</div>
+      <div class="product-card">
+        <img src="images/product-2.jpg" alt="Product">
+        <h3>Produk B</h3>
+        <p class="price">Rp 129.000</p>
+      </div>
 
-<script>
-  const btn = document.querySelector('.customer-btn');
-  const popup = document.querySelector('.customer-popup');
-  btn.addEventListener('click', () => popup.classList.toggle('show'));
-</script>
+      <div class="product-card">
+        <img src="images/product-3.jpg" alt="Product">
+        <h3>Produk C</h3>
+        <p class="price">Rp 149.000</p>
+      </div>
 
+      <div class="product-card">
+        <img src="images/product-4.jpg" alt="Product">
+        <h3>Produk D</h3>
+        <p class="price">Rp 179.000</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    © 2026 Store. All rights reserved.
+  </footer>
+
+  <script src="js/app.js"></script>
 </body>
 </html>

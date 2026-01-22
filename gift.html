@@ -1,204 +1,36 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Claim Gift</title>
+<script>
+  const form = document.getElementById("giftForm");
+  const notif = document.getElementById("notif");
 
-  <!-- CSS GLOBAL -->
-  <link rel="stylesheet" href="https://ubedcrm.github.io/survey-ui/css/style.css">
+  form.addEventListener("submit", e => {
+    e.preventDefault();
 
-  <!-- STYLE KHUSUS FORM -->
-  <style>
-    body {
-      background: #f8f8f8;
-    }
+    const data = new FormData(form);
+    const params = new URLSearchParams();
+    for (let pair of data) params.append(pair[0], pair[1]);
 
-    .survey-wrapper {
-      max-width: 420px;
-      margin: 60px auto;
-      background: #fff;
-      padding: 28px;
-      border-radius: 16px;
-      box-shadow: 0 12px 30px rgba(0,0,0,.08);
-    }
+    fetch("https://script.google.com/macros/s/AKfycbykkMnmYEaD1-sVQWpMgBRyxapVrl88ykFwqw1N_xF8_iUmMJCiNtJj7TwbxbjZBaZ4XA/exec", {
+      method: "POST",
+      body: params
+    })
+    .then(() => {
+      showNotif("Survey berhasil dikirim 🎉", "success");
+      form.reset();
 
-    .survey-wrapper h2 {
-      text-align: center;
-      margin-bottom: 8px;
-    }
-
-    .survey-wrapper p {
-      text-align: center;
-      color: #666;
-      font-size: 14px;
-      margin-bottom: 24px;
-    }
-
-    .survey-wrapper label {
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 6px;
-      display: block;
-    }
-
-    .survey-wrapper input,
-    .survey-wrapper select {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      border: 1px solid #ddd;
-      margin-bottom: 16px;
-      font-size: 14px;
-    }
-
-    .survey-wrapper button {
-      width: 100%;
-      padding: 14px;
-      border-radius: 12px;
-      border: none;
-      background: #111;
-      color: #fff;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .survey-wrapper button:hover {
-      opacity: .9;
-    }
-
-    /* NOTIFIKASI */
-    #notif {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #fff;
-      padding: 14px 22px;
-      border-radius: 14px;
-      box-shadow: 0 8px 20px rgba(0,0,0,.2);
-      display: none;
-      font-weight: 600;
-      z-index: 999;
-      text-align: center;
-    }
-
-    #notif.success {
-      border: 2px solid #22c55e;
-      color: #16a34a;
-    }
-
-    #notif.error {
-      border: 2px solid #ef4444;
-      color: #dc2626;
-    }
-  </style>
-</head>
-<body>
-
-  <!-- NAVBAR -->
-  <header class="navbar">
-    <div class="logo">
-      <a href="https://ubedcrm.github.io/survey-ui/" style="text-decoration:none;color:#111;">
-        STORE
-      </a>
-    </div>
-    <nav>
-      <a href="https://ubedcrm.github.io/survey-ui/">Home</a>
-      <a href="https://ubedcrm.github.io/survey-ui/products.html">Products</a>
-      <a href="https://ubedcrm.github.io/survey-ui/gift.html" class="active highlight">Claim Gift</a>
-    </nav>
-  </header>
-
-  <!-- FORM -->
-  <div class="survey-wrapper">
-    <h2>Claim Gift 🎁</h2>
-    <p>Isi survey singkat untuk mendapatkan hadiah dari kami</p>
-
-    <form id="giftForm">
-      <input type="text" name="nama" placeholder="Nama lengkap" required>
-      <input type="tel" name="hp" placeholder="Nomor HP" required>
-      <input type="text" name="alamat" placeholder="Alamat" required>
-
-      <label>Kepuasan Produk</label>
-      <select name="kepuasan_produk" required>
-        <option value="">Pilih</option>
-        <option value="5">5 - Sangat Puas</option>
-        <option value="4">4 - Puas</option>
-        <option value="3">3 - Cukup</option>
-        <option value="2">2 - Kurang</option>
-        <option value="1">1 - Sangat Kurang</option>
-      </select>
-
-      <label>Layanan Customer Service</label>
-      <select name="layanan_cs" required>
-        <option value="">Pilih</option>
-        <option value="5">5 - Sangat Baik</option>
-        <option value="4">4 - Baik</option>
-        <option value="3">3 - Cukup</option>
-        <option value="2">2 - Kurang</option>
-        <option value="1">1 - Sangat Kurang</option>
-      </select>
-
-      <label>Layanan WhatsApp</label>
-      <select name="layanan_wa" required>
-        <option value="">Pilih</option>
-        <option value="5">5 - Sangat Baik</option>
-        <option value="4">4 - Baik</option>
-        <option value="3">3 - Cukup</option>
-        <option value="2">2 - Kurang</option>
-        <option value="1">1 - Sangat Kurang</option>
-      </select>
-
-      <button type="submit">Claim Gift</button>
-    </form>
-  </div>
-
-  <div id="notif"></div>
-
-  <!-- SCRIPT -->
-  <script>
-    const form = document.getElementById("giftForm");
-    const notif = document.getElementById("notif");
-
-    form.addEventListener("submit", e => {
-      e.preventDefault();
-
-      const data = new FormData(form);
-      const params = new URLSearchParams();
-      for (let pair of data) params.append(pair[0], pair[1]);
-
-      fetch("https://script.google.com/macros/s/AKfycbykkMnmYEaD1-sVQWpMgBRyxapVrl88ykFwqw1N_xF8_iUmMJCiNtJj7TwbxbjZBaZ4XA/exec", {
-        method: "POST",
-        body: params
-      })
-      .then(res => res.json())
-      .then(res => {
-        if (res.status === "success") {
-          showNotif(res.message || "Survey berhasil dikirim 🎉", "success");
-          form.reset();
-
-          // AUTO REDIRECT KE THANK YOU PAGE
-          setTimeout(() => {
-            window.location.href = "https://ubedcrm.github.io/survey-ui/thankyou.html";
-          }, 1500);
-        } else {
-          showNotif(res.message || "Gagal mengirim survey", "error");
-        }
-      })
-      .catch(() => {
-        showNotif("Terjadi error, coba lagi nanti", "error");
-      });
+      // PAKSA REDIRECT (GA NUNGGU RESPONSE GAS)
+      setTimeout(() => {
+        window.location.href = "https://ubedcrm.github.io/survey-ui/thankyou.html";
+      }, 1200);
+    })
+    .catch(() => {
+      showNotif("Terjadi error, coba lagi nanti", "error");
     });
+  });
 
-    function showNotif(msg, type) {
-      notif.textContent = msg;
-      notif.className = type;
-      notif.style.display = "block";
-      setTimeout(() => notif.style.display = "none", 3000);
-    }
-  </script>
-
-</body>
-</html>
+  function showNotif(msg, type) {
+    notif.textContent = msg;
+    notif.className = type;
+    notif.style.display = "block";
+    setTimeout(() => notif.style.display = "none", 3000);
+  }
+</script>

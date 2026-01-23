@@ -69,12 +69,16 @@ body {
   color: #ff5ca8;
 }
 
-.hero-tagline {
+/* SUBTITLE DIPINDAH KE BAWAH PADDY */
+.hero-sub {
   font-size: 18px;
   line-height: 1.4;
-  margin-top: 8px;
-  margin-bottom: 24px;
   color: #111;
+}
+
+.hero-sub-below {
+  margin-top: 6px;      /* JARAK DARI PADDY */
+  margin-bottom: 24px; /* JARAK KE TOMBOL */
 }
 
 .hero-btn {

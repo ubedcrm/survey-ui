@@ -10,7 +10,9 @@ body {
   color: #111;
 }
 
-/* NAVBAR */
+/* =========================
+   NAVBAR
+========================= */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -37,7 +39,9 @@ body {
   font-weight: 800;
 }
 
-/* HERO */
+/* =========================
+   HERO
+========================= */
 .hero-wrapper {
   padding: 40px 40px 60px;
 }
@@ -74,13 +78,20 @@ body {
   text-decoration: none;
 }
 
-/* SLIDER */
+/* =========================
+   SLIDER
+========================= */
 .slider {
   max-width: 420px;
 }
 
-.slide { display: none; }
-.slide.active { display: block; }
+.slide {
+  display: none;
+}
+
+.slide.active {
+  display: block;
+}
 
 .slide img {
   width: 100%;
@@ -106,7 +117,9 @@ body {
   background: #ff5ca8;
 }
 
-/* USP BAR */
+/* =========================
+   USP BAR (PALING BAWAH)
+========================= */
 .usp-bar {
   background: #e60073;
   padding: 28px 20px;
@@ -116,6 +129,7 @@ body {
   max-width: 1200px;
   margin: auto;
   display: flex;
+  flex-direction: row;              /* 🔥 PAKSA SAMPING */
   align-items: center;
   justify-content: space-between;
   color: #fff;
@@ -138,15 +152,28 @@ body {
   background: rgba(255,255,255,0.5);
 }
 
-/* FOOTER */
+/* =========================
+   FOOTER
+========================= */
 .footer {
   text-align: center;
   padding: 24px;
   color: #777;
 }
 
-/* RESPONSIVE */
-@media (max-width: 900px) {
+/* =========================
+   RESPONSIVE
+========================= */
+
+/* Tablet & desktop tetap SAMPING */
+@media (min-width: 601px) {
+  .usp-container {
+    flex-direction: row !important;
+  }
+}
+
+/* HP kecil baru KE BAWAH */
+@media (max-width: 600px) {
   .hero-card {
     flex-direction: column;
     text-align: center;

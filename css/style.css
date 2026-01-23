@@ -18,15 +18,13 @@ body {
   padding: 18px 40px;
   border-bottom: 1px solid #eee;
   background: #fff;
-  position: sticky;
-  top: 0;
-  z-index: 10;
 }
 
 .logo a {
   font-size: 22px;
   font-weight: 800;
-  letter-spacing: -0.5px;
+  text-decoration: none;
+  color: #111;
 }
 
 .navbar nav a {
@@ -40,27 +38,20 @@ body {
   font-weight: 800;
 }
 
-/* =========================
-   HERO PADDY STYLE
-========================= */
-
-.hero-new {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 80px 60px;
-  gap: 40px;
+/* HERO */
+.hero-wrapper {
+  padding: 40px 40px 80px;
 }
 
-.hero-pattern {
-  background-color: #ffefe6;
-  background-image:
-    radial-gradient(#ffb3d9 1.5px, transparent 1.5px),
-    radial-gradient(#ffd6a5 1.5px, transparent 1.5px);
-  background-size: 32px 32px;
-  background-position: 0 0, 16px 16px;
-  border-bottom-left-radius: 48px;
-  border-bottom-right-radius: 48px;
+.hero-card {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #ffefe6;
+  border-radius: 32px;
+  padding: 60px;
+  display: flex;
+  align-items: center;
+  gap: 40px;
 }
 
 .hero-left {
@@ -70,8 +61,8 @@ body {
 .hero-title {
   font-size: 72px;
   font-weight: 900;
-  margin-bottom: 16px;
   color: #ff5ca8;
+  margin-bottom: 16px;
 }
 
 .hero-sub {
@@ -84,11 +75,10 @@ body {
   display: inline-block;
   background: #ff5ca8;
   color: #fff;
-  padding: 14px 34px;
+  padding: 14px 36px;
   border-radius: 999px;
   font-weight: 800;
   text-decoration: none;
-  font-size: 16px;
 }
 
 .hero-btn:hover {
@@ -101,8 +91,9 @@ body {
 }
 
 .hero-right img {
-  max-width: 100%;
-  border-radius: 28px;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 24px;
 }
 
 /* PRODUCTS */
@@ -125,8 +116,6 @@ body {
   border: 1px solid #eee;
   border-radius: 16px;
   padding: 16px;
-  background: #fff;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.04);
 }
 
 .product-card img {
@@ -135,29 +124,24 @@ body {
   margin-bottom: 12px;
 }
 
-.product-card h3 {
-  font-size: 16px;
-  margin-bottom: 6px;
-}
-
 .price {
   font-weight: 700;
 }
 
 /* FOOTER */
 .footer {
-  padding: 24px;
   text-align: center;
+  padding: 24px;
   color: #777;
   font-size: 14px;
 }
 
 /* RESPONSIVE */
 @media (max-width: 900px) {
-  .hero-new {
+  .hero-card {
     flex-direction: column;
-    padding: 60px 24px;
     text-align: center;
+    padding: 40px 24px;
   }
 
   .hero-title {
@@ -166,6 +150,10 @@ body {
 
   .hero-right {
     text-align: center;
+  }
+
+  .hero-right img {
+    max-width: 320px;
   }
 
   .navbar {

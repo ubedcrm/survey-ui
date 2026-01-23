@@ -4,119 +4,121 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>PaddyID | Belanja Mudah & Cepat</title>
+
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<!-- NAVBAR -->
-<header class="navbar">
-  <div class="logo">
-    <a href="https://ubedcrm.github.io/survey-ui/">PaddyID</a>
-  </div>
-  <nav>
-    <a href="index.html" class="active">Home</a>
-    <a href="products.html">Products</a>
-    <a href="gift.html">Claim Gift</a>
-  </nav>
-</header>
-
-<!-- HERO -->
-<section class="hero-wrapper">
-  <div class="hero-card">
-
-    <div class="hero-left">
-      <h1 class="hero-title">Paddy</h1>
-      <p class="hero-sub">
-        Customized Phone Cases &<br>
-        Adorable Goods
-      </p>
-      <a href="products.html" class="hero-btn">Shop Now</a>
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="logo">
+      <a href="https://ubedcrm.github.io/survey-ui/">PaddyID</a>
     </div>
+    <nav>
+      <a href="index.html" class="active">Home</a>
+      <a href="products.html">Products</a>
+      <a href="gift.html">Claim Gift</a>
+    </nav>
+  </header>
 
-    <div class="hero-right">
-      <div class="slider" id="heroSlider">
-        <div class="slide active"><img src="images/hero-1.png"></div>
-        <div class="slide"><img src="images/hero-2.png"></div>
-        <div class="slide"><img src="images/hero-3.png"></div>
-        <div class="slide"><img src="images/hero-4.png"></div>
-        <div class="slide"><img src="images/hero-5.png"></div>
-        <div class="slide"><img src="images/hero-6.png"></div>
-        <div class="slide"><img src="images/hero-7.png"></div>
-        <div class="slide"><img src="images/hero-8.png"></div>
-        <div class="slide"><img src="images/hero-9.png"></div>
+  <!-- HERO + SLIDER -->
+  <section class="hero-wrapper">
+    <div class="hero-card">
 
-        <div class="dots" id="heroDots"></div>
+      <div class="hero-left">
+        <h1 class="hero-title">Paddy</h1>
+        <p class="hero-sub">
+          Customized Phone Cases &<br>
+          Adorable Goods
+        </p>
+        <a href="products.html" class="hero-btn">Shop Now</a>
       </div>
+
+      <div class="hero-right">
+        <div class="slider" id="heroSlider">
+          <div class="slide active"><img src="images/hero-1.png"></div>
+          <div class="slide"><img src="images/hero-2.png"></div>
+          <div class="slide"><img src="images/hero-3.png"></div>
+          <div class="slide"><img src="images/hero-4.png"></div>
+          <div class="slide"><img src="images/hero-5.png"></div>
+          <div class="slide"><img src="images/hero-6.png"></div>
+          <div class="slide"><img src="images/hero-7.png"></div>
+          <div class="slide"><img src="images/hero-8.png"></div>
+          <div class="slide"><img src="images/hero-9.png"></div>
+
+          <div class="dots" id="heroDots"></div>
+        </div>
+      </div>
+
     </div>
+  </section>
 
-  </div>
-</section>
+  <!-- USP BAR (TIDAK IKUT SLIDER) -->
+  <section class="usp-bar">
+    <div class="usp-container">
 
-<!-- USP BAR (NEMPEL DI BAWAH HERO) -->
-<section class="usp-bar">
-  <div class="usp-inner">
+      <div class="usp-item">
+        <span class="usp-icon">😊</span>
+        <p>Garansi kepuasan<br>100%</p>
+      </div>
 
-    <div class="usp-item">
-      <span class="usp-icon">😊</span>
-      <p>Garansi kepuasan<br>100%</p>
+      <div class="usp-divider"></div>
+
+      <div class="usp-item">
+        <span class="usp-icon">👍</span>
+        <p>Bahan case dan tas<br>menggunakan bahan terbaik</p>
+      </div>
+
+      <div class="usp-divider"></div>
+
+      <div class="usp-item">
+        <span class="usp-icon">📞</span>
+        <p>Pelayanan customer<br>service terbaik</p>
+      </div>
+
+      <div class="usp-divider"></div>
+
+      <div class="usp-item">
+        <span class="usp-icon">☀️</span>
+        <p>Proses cetak dengan<br>Teknologi UV Jepang</p>
+      </div>
+
     </div>
+  </section>
 
-    <div class="usp-line"></div>
+  <!-- FOOTER -->
+  <footer class="footer">
+    © 2026 PaddyID. All rights reserved.
+  </footer>
 
-    <div class="usp-item">
-      <span class="usp-icon">👍</span>
-      <p>Bahan case dan tas<br>menggunakan bahan terbaik</p>
-    </div>
+  <!-- SLIDER SCRIPT -->
+  <script>
+    const slides = document.querySelectorAll("#heroSlider .slide");
+    const dotsContainer = document.getElementById("heroDots");
+    let currentSlide = 0;
 
-    <div class="usp-line"></div>
-
-    <div class="usp-item">
-      <span class="usp-icon">📞</span>
-      <p>Pelayanan customer<br>service terbaik</p>
-    </div>
-
-    <div class="usp-line"></div>
-
-    <div class="usp-item">
-      <span class="usp-icon">☀️</span>
-      <p>Proses cetak dengan<br>Teknologi UV Jepang</p>
-    </div>
-
-  </div>
-</section>
-
-<footer class="footer">
-  © 2026 PaddyID. All rights reserved.
-</footer>
-
-<!-- SLIDER SCRIPT -->
-<script>
-  const slides = document.querySelectorAll("#heroSlider .slide");
-  const dotsContainer = document.getElementById("heroDots");
-  let current = 0;
-
-  slides.forEach((_, i) => {
-    const dot = document.createElement("span");
-    dot.className = "dot" + (i === 0 ? " active" : "");
-    dot.onclick = () => showSlide(i);
-    dotsContainer.appendChild(dot);
-  });
-
-  const dots = document.querySelectorAll(".dot");
-
-  function showSlide(i) {
-    slides.forEach((s, idx) => {
-      s.classList.toggle("active", idx === i);
-      dots[idx].classList.toggle("active", idx === i);
+    slides.forEach((_, i) => {
+      const dot = document.createElement("span");
+      dot.className = "dot" + (i === 0 ? " active" : "");
+      dot.onclick = () => showSlide(i);
+      dotsContainer.appendChild(dot);
     });
-    current = i;
-  }
 
-  setInterval(() => {
-    current = (current + 1) % slides.length;
-    showSlide(current);
-  }, 4000);
-</script>
+    const dots = document.querySelectorAll(".dot");
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.toggle("active", i === index);
+        dots[i].classList.toggle("active", i === index);
+      });
+      currentSlide = index;
+    }
+
+    setInterval(() => {
+      currentSlide = (currentSlide + 1) % slides.length;
+      showSlide(currentSlide);
+    }, 4000);
+  </script>
 
 </body>
 </html>

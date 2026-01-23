@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Inter, system-ui, sans-serif;
+  font-family: Arial, system-ui, sans-serif;
 }
 
 body {
@@ -17,53 +17,92 @@ body {
   align-items: center;
   padding: 18px 40px;
   border-bottom: 1px solid #eee;
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
-.logo {
+.logo a {
   font-size: 22px;
-  font-weight: 700;
+  font-weight: 800;
+  letter-spacing: -0.5px;
 }
 
 .navbar nav a {
   margin-left: 28px;
   text-decoration: none;
   color: #111;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .navbar nav a.active {
-  font-weight: 700;
+  font-weight: 800;
 }
 
-/* HERO */
-.hero {
-  background: #f6f6f6;
-  padding: 80px 40px;
+/* =========================
+   HERO PADDY STYLE
+========================= */
+
+.hero-new {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 80px 60px;
+  gap: 40px;
 }
 
-.hero-text {
-  max-width: 520px;
+.hero-pattern {
+  background-color: #ffefe6;
+  background-image:
+    radial-gradient(#ffb3d9 1.5px, transparent 1.5px),
+    radial-gradient(#ffd6a5 1.5px, transparent 1.5px);
+  background-size: 32px 32px;
+  background-position: 0 0, 16px 16px;
+  border-bottom-left-radius: 48px;
+  border-bottom-right-radius: 48px;
 }
 
-.hero h1 {
-  font-size: 42px;
+.hero-left {
+  flex: 1;
+}
+
+.hero-title {
+  font-size: 72px;
+  font-weight: 900;
   margin-bottom: 16px;
+  color: #ff5ca8;
 }
 
-.hero p {
-  color: #666;
-  margin-bottom: 24px;
-  line-height: 1.6;
+.hero-sub {
+  font-size: 20px;
+  line-height: 1.4;
+  margin-bottom: 28px;
 }
 
-.btn {
+.hero-btn {
   display: inline-block;
-  background: #111;
+  background: #ff5ca8;
   color: #fff;
-  padding: 14px 28px;
-  border-radius: 10px;
+  padding: 14px 34px;
+  border-radius: 999px;
+  font-weight: 800;
   text-decoration: none;
-  font-weight: 500;
+  font-size: 16px;
+}
+
+.hero-btn:hover {
+  opacity: 0.9;
+}
+
+.hero-right {
+  flex: 1;
+  text-align: right;
+}
+
+.hero-right img {
+  max-width: 100%;
+  border-radius: 28px;
 }
 
 /* PRODUCTS */
@@ -84,18 +123,15 @@ body {
 
 .product-card {
   border: 1px solid #eee;
-  border-radius: 14px;
+  border-radius: 16px;
   padding: 16px;
-  transition: transform 0.15s ease;
-}
-
-.product-card:hover {
-  transform: translateY(-4px);
+  background: #fff;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.04);
 }
 
 .product-card img {
   width: 100%;
-  border-radius: 10px;
+  border-radius: 12px;
   margin-bottom: 12px;
 }
 
@@ -105,7 +141,7 @@ body {
 }
 
 .price {
-  font-weight: 600;
+  font-weight: 700;
 }
 
 /* FOOTER */
@@ -117,13 +153,23 @@ body {
 }
 
 /* RESPONSIVE */
-@media (max-width: 768px) {
-  .navbar {
-    padding: 16px 20px;
+@media (max-width: 900px) {
+  .hero-new {
+    flex-direction: column;
+    padding: 60px 24px;
+    text-align: center;
   }
 
-  .hero {
-    padding: 60px 20px;
+  .hero-title {
+    font-size: 56px;
+  }
+
+  .hero-right {
+    text-align: center;
+  }
+
+  .navbar {
+    padding: 16px 20px;
   }
 
   .products {

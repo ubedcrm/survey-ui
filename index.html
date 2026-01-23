@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>PaddyID | Belanja Mudah & Cepat</title>
+  <title>PaddyID | Customized Phone Cases</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<!-- NAVBAR -->
 <header class="navbar">
   <div class="logo">
     <a href="https://ubedcrm.github.io/survey-ui/">PaddyID</a>
@@ -21,65 +20,50 @@
 </header>
 
 <!-- HERO -->
-<section class="hero-wrapper">
-  <div class="hero-card">
+<section class="hero">
+  <div class="hero-inner">
 
-    <div class="hero-left">
-      <h1 class="hero-title">Paddy</h1>
-      <p class="hero-sub">
+    <!-- LEFT -->
+    <div class="hero-text">
+      <h1>Paddy</h1>
+      <p>
         Customized Phone Cases &<br>
         Adorable Goods
       </p>
-      <a href="products.html" class="hero-btn">Shop Now</a>
+      <a href="products.html" class="btn">Shop Now</a>
     </div>
 
-    <div class="hero-right">
-      <div class="slider" id="heroSlider">
-        <div class="slide active"><img src="images/hero-1.png"></div>
-        <div class="slide"><img src="images/hero-2.png"></div>
-        <div class="slide"><img src="images/hero-3.png"></div>
-        <div class="slide"><img src="images/hero-4.png"></div>
-        <div class="slide"><img src="images/hero-5.png"></div>
-        <div class="slide"><img src="images/hero-6.png"></div>
-        <div class="slide"><img src="images/hero-7.png"></div>
-        <div class="slide"><img src="images/hero-8.png"></div>
-        <div class="slide"><img src="images/hero-9.png"></div>
+    <!-- RIGHT -->
+    <div class="hero-banner">
 
-        <div class="dots" id="heroDots"></div>
+      <!-- SLIDER -->
+      <div class="banner-slider" id="bannerSlider">
+        <img src="images/hero-1.png" class="active">
+        <img src="images/hero-2.png">
+        <img src="images/hero-3.png">
+        <img src="images/hero-4.png">
+        <img src="images/hero-5.png">
       </div>
-    </div>
 
-  </div>
-</section>
+      <!-- USP BAR -->
+      <div class="usp-bar">
+        <div class="usp-item">
+          😊<span>Garansi<br>100%</span>
+        </div>
+        <div class="usp-line"></div>
+        <div class="usp-item">
+          👍<span>Bahan<br>Terbaik</span>
+        </div>
+        <div class="usp-line"></div>
+        <div class="usp-item">
+          📞<span>CS<br>Responsif</span>
+        </div>
+        <div class="usp-line"></div>
+        <div class="usp-item">
+          ☀️<span>UV Jepang</span>
+        </div>
+      </div>
 
-<!-- USP BAR (NEMPEL DI BAWAH HERO) -->
-<section class="usp-bar">
-  <div class="usp-inner">
-
-    <div class="usp-item">
-      <span class="usp-icon">😊</span>
-      <p>Garansi kepuasan<br>100%</p>
-    </div>
-
-    <div class="usp-line"></div>
-
-    <div class="usp-item">
-      <span class="usp-icon">👍</span>
-      <p>Bahan case dan tas<br>menggunakan bahan terbaik</p>
-    </div>
-
-    <div class="usp-line"></div>
-
-    <div class="usp-item">
-      <span class="usp-icon">📞</span>
-      <p>Pelayanan customer<br>service terbaik</p>
-    </div>
-
-    <div class="usp-line"></div>
-
-    <div class="usp-item">
-      <span class="usp-icon">☀️</span>
-      <p>Proses cetak dengan<br>Teknologi UV Jepang</p>
     </div>
 
   </div>
@@ -89,32 +73,13 @@
   © 2026 PaddyID. All rights reserved.
 </footer>
 
-<!-- SLIDER SCRIPT -->
 <script>
-  const slides = document.querySelectorAll("#heroSlider .slide");
-  const dotsContainer = document.getElementById("heroDots");
-  let current = 0;
-
-  slides.forEach((_, i) => {
-    const dot = document.createElement("span");
-    dot.className = "dot" + (i === 0 ? " active" : "");
-    dot.onclick = () => showSlide(i);
-    dotsContainer.appendChild(dot);
-  });
-
-  const dots = document.querySelectorAll(".dot");
-
-  function showSlide(i) {
-    slides.forEach((s, idx) => {
-      s.classList.toggle("active", idx === i);
-      dots[idx].classList.toggle("active", idx === i);
-    });
-    current = i;
-  }
-
+  const slides = document.querySelectorAll("#bannerSlider img");
+  let i = 0;
   setInterval(() => {
-    current = (current + 1) % slides.length;
-    showSlide(current);
+    slides[i].classList.remove("active");
+    i = (i + 1) % slides.length;
+    slides[i].classList.add("active");
   }, 4000);
 </script>
 

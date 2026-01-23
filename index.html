@@ -38,40 +38,54 @@
       </div>
 
       <div class="hero-right">
-        <img src="images/hero-banner.png" alt="Paddy Banner">
+        <div class="slider" id="heroSlider">
+
+          <div class="slide active"><img src="images/hero-1.jpg"></div>
+          <div class="slide"><img src="images/hero-2.jpg"></div>
+          <div class="slide"><img src="images/hero-3.jpg"></div>
+          <div class="slide"><img src="images/hero-4.jpg"></div>
+          <div class="slide"><img src="images/hero-5.jpg"></div>
+          <div class="slide"><img src="images/hero-6.jpg"></div>
+          <div class="slide"><img src="images/hero-7.jpg"></div>
+          <div class="slide"><img src="images/hero-8.jpg"></div>
+          <div class="slide"><img src="images/hero-9.jpg"></div>
+
+          <div class="dots" id="heroDots"></div>
+        </div>
       </div>
 
     </div>
   </section>
 
-  <!-- PRODUK -->
+  <!-- PRODUCTS -->
   <section class="products">
     <h2>Produk Terlaris</h2>
-
     <div class="product-grid">
+
       <div class="product-card">
-        <img src="images/product-1.jpg" alt="Product">
+        <img src="images/product-1.jpg">
         <h3>Produk A</h3>
         <p class="price">Rp 99.000</p>
       </div>
 
       <div class="product-card">
-        <img src="images/product-2.jpg" alt="Product">
+        <img src="images/product-2.jpg">
         <h3>Produk B</h3>
         <p class="price">Rp 129.000</p>
       </div>
 
       <div class="product-card">
-        <img src="images/product-3.jpg" alt="Product">
+        <img src="images/product-3.jpg">
         <h3>Produk C</h3>
         <p class="price">Rp 149.000</p>
       </div>
 
       <div class="product-card">
-        <img src="images/product-4.jpg" alt="Product">
+        <img src="images/product-4.jpg">
         <h3>Produk D</h3>
         <p class="price">Rp 179.000</p>
       </div>
+
     </div>
   </section>
 
@@ -79,6 +93,35 @@
   <footer class="footer">
     © 2026 PaddyID. All rights reserved.
   </footer>
+
+  <!-- SLIDER SCRIPT -->
+  <script>
+    const slides = document.querySelectorAll("#heroSlider .slide");
+    const dotsContainer = document.getElementById("heroDots");
+    let currentSlide = 0;
+
+    slides.forEach((_, i) => {
+      const dot = document.createElement("span");
+      dot.className = "dot" + (i === 0 ? " active" : "");
+      dot.onclick = () => showSlide(i);
+      dotsContainer.appendChild(dot);
+    });
+
+    const dots = document.querySelectorAll(".dot");
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.toggle("active", i === index);
+        dots[i].classList.toggle("active", i === index);
+      });
+      currentSlide = index;
+    }
+
+    setInterval(() => {
+      currentSlide = (currentSlide + 1) % slides.length;
+      showSlide(currentSlide);
+    }, 4000);
+  </script>
 
 </body>
 </html>

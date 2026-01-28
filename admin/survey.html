@@ -2,230 +2,118 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Dashboard | PaddyID</title>
-
+<title>Dashboard Survey</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f6f7fb;
-  margin: 0;
-  padding: 30px;
-}
-
-h1 { margin-bottom: 4px; }
-
-.filter { margin: 20px 0; }
-
-select {
-  padding: 8px 12px;
-  font-size: 14px;
-}
-
-.cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  margin-bottom: 30px;
-}
-
-.card {
-  background: #fff;
-  padding: 20px;
-  border-radius: 14px;
-  box-shadow: 0 4px 12px rgba(0,0,0,.08);
-  text-align: center;
-}
-
-.card h2 {
-  margin: 0;
-  font-size: 32px;
-  color: #ff5ca8;
-}
-
-.table-wrap {
-  background: #fff;
-  border-radius: 14px;
-  padding: 20px;
-  box-shadow: 0 4px 12px rgba(0,0,0,.08);
-  overflow-x: auto;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-  font-size: 14px;
-}
-
-th { background: #fafafa; }
-
-canvas {
-  background: #fff;
-  border-radius: 14px;
-  padding: 20px;
-  box-shadow: 0 4px 12px rgba(0,0,0,.08);
-}
+body{font-family:Arial;background:#f6f7fb;margin:0;padding:30px}
+h1{margin-bottom:10px}
+select{padding:6px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin:20px 0}
+.card{background:#fff;padding:20px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.08);text-align:center}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden}
+th,td{padding:10px;border-bottom:1px solid #eee;text-align:center}
+th{background:#ff5ca8;color:#fff}
+canvas{background:#fff;border-radius:12px;padding:20px}
 </style>
 </head>
-
 <body>
 
 <h1>📊 Dashboard Survey Customer</h1>
-<p>Data realtime dari Google Sheet</p>
-
-<div class="filter">
-  Filter Bulan:
-  <select id="monthFilter">
-    <option value="all">Semua</option>
-  </select>
-</div>
+Filter Bulan:
+<select id="bulan"></select>
 
 <div class="cards">
-  <div class="card">
-    <p>Kepuasan Produk</p>
-    <h2 id="avgProduk">-</h2>
-  </div>
-  <div class="card">
-    <p>Layanan CS</p>
-    <h2 id="avgCS">-</h2>
-  </div>
-  <div class="card">
-    <p>Layanan WA</p>
-    <h2 id="avgWA">-</h2>
-  </div>
+  <div class="card"><h3>Kepuasan Produk</h3><b id="avgProduk">-</b></div>
+  <div class="card"><h3>Layanan CS</h3><b id="avgCS">-</b></div>
+  <div class="card"><h3>Layanan WA</h3><b id="avgWA">-</b></div>
 </div>
 
 <canvas id="chart" height="120"></canvas>
+
 <br>
 
-<div class="table-wrap">
-  <table id="dataTable">
-    <thead>
-      <tr>
-        <th>Nama</th>
-        <th>HP</th>
-        <th>Alamat</th>
-        <th>Produk</th>
-        <th>CS</th>
-        <th>WA</th>
-        <th>Tanggal</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-</div>
+<table>
+<thead>
+<tr>
+<th>Nama</th><th>HP</th><th>Alamat</th><th>Produk</th><th>CS</th><th>WA</th><th>Tanggal</th>
+</tr>
+</thead>
+<tbody id="tbody"></tbody>
+</table>
 
 <script>
 const API_URL =
-  "https://script.google.com/macros/s/AKfycbykkMnmYEaD1-sVQWpMgBRyxapVrl88ykFwqw1N_xF8_iUmMJCiNtJj7TwbxbjZBaZ4XA/exec?action=survey";
+"https://script.google.com/macros/s/AKfycbykkMnmYEaD1-sVQWpMgBRyxapVrl88ykFwqw1N_xF8_iUmMJCiNtJj7TwbxbjZBaZ4XA/exec?token=UBED_ADMIN_2026";
 
 let rawData = [];
 let chart;
 
 fetch(API_URL)
-  .then(res => res.json())
-  .then(data => {
-    if (data.error) {
-      alert("Akses ditolak. Login pakai email admin.");
-      return;
-    }
-    rawData = data;
-    initMonthFilter(data);
-    render(data);
-  });
+.then(r=>r.json())
+.then(d=>{
+  rawData = d;
+  initFilter();
+  render();
+});
 
-function initMonthFilter(data) {
-  const months = [...new Set(
-    data.map(d => new Date(d.Timestamp).toISOString().slice(0,7))
-  )];
-
-  const select = document.getElementById("monthFilter");
-
-  months.forEach(m => {
-    const opt = document.createElement("option");
-    opt.value = m;
-    opt.textContent = m;
-    select.appendChild(opt);
-  });
-
-  select.onchange = () => {
-    const val = select.value;
-    const filtered =
-      val === "all"
-        ? rawData
-        : rawData.filter(d =>
-            new Date(d.Timestamp).toISOString().startsWith(val)
-          );
-    render(filtered);
-  };
+function initFilter(){
+  const sel = document.getElementById("bulan");
+  sel.innerHTML = `<option value="all">Semua</option>`;
+  [...new Set(rawData.map(x=>new Date(x.Tanggal).getMonth()))]
+    .forEach(m=>{
+      sel.innerHTML += `<option value="${m}">${m+1}</option>`;
+    });
+  sel.onchange = render;
 }
 
-function render(data) {
-  renderTable(data);
-  renderStats(data);
-  renderChart(data);
-}
+function render(){
+  const m = document.getElementById("bulan").value;
+  const data = m==="all" ? rawData : rawData.filter(x=>new Date(x.Tanggal).getMonth()==m);
 
-function renderTable(data) {
-  const tbody = document.querySelector("#dataTable tbody");
-  tbody.innerHTML = "";
-  data.forEach(d => {
+  document.getElementById("avgProduk").innerText = avg(data,"kepuasan_produk");
+  document.getElementById("avgCS").innerText = avg(data,"layanan_cs");
+  document.getElementById("avgWA").innerText = avg(data,"layanan_wa");
+
+  const tbody = document.getElementById("tbody");
+  tbody.innerHTML="";
+  data.forEach(x=>{
     tbody.innerHTML += `
-      <tr>
-        <td>${d.nama}</td>
-        <td>${d.hp}</td>
-        <td>${d.alamat}</td>
-        <td>${d.kepuasan_produk}</td>
-        <td>${d.layanan_cs}</td>
-        <td>${d.layanan_wa}</td>
-        <td>${new Date(d.Timestamp).toLocaleDateString()}</td>
-      </tr>
-    `;
+    <tr>
+      <td>${x.nama}</td>
+      <td>${x.hp}</td>
+      <td>${x.alamat}</td>
+      <td>${x.kepuasan_produk}</td>
+      <td>${x.layanan_cs}</td>
+      <td>${x.layanan_wa}</td>
+      <td>${new Date(x.Tanggal).toLocaleDateString()}</td>
+    </tr>`;
   });
+
+  drawChart(data);
 }
 
-function avg(data, key) {
-  if (!data.length) return "-";
-  return (
-    data.reduce((a, b) => a + Number(b[key] || 0), 0) / data.length
-  ).toFixed(1);
+function avg(data,key){
+  if(!data.length) return "-";
+  return (data.reduce((a,b)=>a+Number(b[key]),0)/data.length).toFixed(1);
 }
 
-function renderStats(data) {
-  document.getElementById("avgProduk").textContent = avg(data,"kepuasan_produk");
-  document.getElementById("avgCS").textContent = avg(data,"layanan_cs");
-  document.getElementById("avgWA").textContent = avg(data,"layanan_wa");
-}
-
-function renderChart(data) {
-  const values = [
-    avg(data,"kepuasan_produk"),
-    avg(data,"layanan_cs"),
-    avg(data,"layanan_wa")
-  ];
-
-  if (chart) chart.destroy();
-
-  chart = new Chart(document.getElementById("chart"), {
-    type: "bar",
-    data: {
-      labels: ["Produk","CS","WA"],
-      datasets: [{
-        data: values,
-        backgroundColor: "#ff5ca8"
+function drawChart(data){
+  const ctx = document.getElementById("chart");
+  if(chart) chart.destroy();
+  chart = new Chart(ctx,{
+    type:"bar",
+    data:{
+      labels:["Produk","CS","WA"],
+      datasets:[{
+        data:[
+          avg(data,"kepuasan_produk"),
+          avg(data,"layanan_cs"),
+          avg(data,"layanan_wa")
+        ],
+        backgroundColor:["#ff5ca8","#ff8ac1","#ffc0dd"]
       }]
-    },
-    options: {
-      scales: {
-        y: { beginAtZero: true, max: 5 }
-      }
     }
   });
 }

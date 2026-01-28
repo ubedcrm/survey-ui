@@ -10,8 +10,9 @@
 
 <!-- NAVBAR -->
 <header class="navbar">
-  <div class="logo" id="logoPaddy">
-    <a href="https://ubedcrm.github.io/survey-ui/">PaddyID</a>
+  <div class="logo">
+    <!-- ⚠️ ID DIPINDAH KE <a> -->
+    <a href="https://ubedcrm.github.io/survey-ui/" id="logoPaddy">PaddyID</a>
   </div>
   <nav>
     <a href="index.html" class="active">Home</a>
@@ -20,11 +21,10 @@
   </nav>
 </header>
 
-<!-- HERO (LAYOUT TETAP) -->
+<!-- HERO -->
 <section class="hero-wrapper">
   <div class="hero-card hero-fix">
 
-    <!-- TEXT -->
     <div class="hero-text">
       <h1 class="hero-title">Paddy</h1>
 
@@ -36,18 +36,17 @@
       <a href="products.html" class="hero-btn">Shop Now</a>
     </div>
 
-    <!-- SLIDER -->
     <div class="hero-slider">
       <div class="slider" id="heroSlider">
-        <div class="slide active"><img src="images/hero-1.png" alt=""></div>
-        <div class="slide"><img src="images/hero-2.png" alt=""></div>
-        <div class="slide"><img src="images/hero-3.png" alt=""></div>
-        <div class="slide"><img src="images/hero-4.png" alt=""></div>
-        <div class="slide"><img src="images/hero-5.png" alt=""></div>
-        <div class="slide"><img src="images/hero-6.png" alt=""></div>
-        <div class="slide"><img src="images/hero-7.png" alt=""></div>
-        <div class="slide"><img src="images/hero-8.png" alt=""></div>
-        <div class="slide"><img src="images/hero-9.png" alt=""></div>
+        <div class="slide active"><img src="images/hero-1.png"></div>
+        <div class="slide"><img src="images/hero-2.png"></div>
+        <div class="slide"><img src="images/hero-3.png"></div>
+        <div class="slide"><img src="images/hero-4.png"></div>
+        <div class="slide"><img src="images/hero-5.png"></div>
+        <div class="slide"><img src="images/hero-6.png"></div>
+        <div class="slide"><img src="images/hero-7.png"></div>
+        <div class="slide"><img src="images/hero-8.png"></div>
+        <div class="slide"><img src="images/hero-9.png"></div>
 
         <div class="dots" id="heroDots"></div>
       </div>
@@ -56,7 +55,6 @@
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer class="footer">
   © 2026 PaddyID. All rights reserved.
 </footer>
@@ -64,43 +62,17 @@
 <!-- USP BAR -->
 <section class="usp-bar">
   <div class="usp-row">
-
-    <div class="usp-box">
-      <div class="usp-icon">😊</div>
-      <div class="usp-text">Garansi kepuasan<br>100%</div>
-    </div>
-
+    <div class="usp-box"><div class="usp-icon">😊</div><div class="usp-text">Garansi kepuasan<br>100%</div></div>
     <div class="usp-divider"></div>
-
-    <div class="usp-box">
-      <div class="usp-icon">👍</div>
-      <div class="usp-text">
-        Bahan case dan tas<br>menggunakan bahan terbaik
-      </div>
-    </div>
-
+    <div class="usp-box"><div class="usp-icon">👍</div><div class="usp-text">Bahan terbaik</div></div>
     <div class="usp-divider"></div>
-
-    <div class="usp-box">
-      <div class="usp-icon">📞</div>
-      <div class="usp-text">
-        Pelayanan customer<br>service terbaik
-      </div>
-    </div>
-
+    <div class="usp-box"><div class="usp-icon">📞</div><div class="usp-text">CS terbaik</div></div>
     <div class="usp-divider"></div>
-
-    <div class="usp-box">
-      <div class="usp-icon">☀️</div>
-      <div class="usp-text">
-        Proses cetak dengan<br>Teknologi UV Jepang
-      </div>
-    </div>
-
+    <div class="usp-box"><div class="usp-icon">☀️</div><div class="usp-text">UV Jepang</div></div>
   </div>
 </section>
 
-<!-- SLIDER SCRIPT -->
+<!-- SLIDER -->
 <script>
   const slides = document.querySelectorAll("#heroSlider .slide");
   const dotsContainer = document.getElementById("heroDots");
@@ -130,22 +102,26 @@
 </script>
 
 <!-- ===============================
-     ADMIN ACCESS (TERSEMBUNYI)
+     ADMIN ACCESS (FIXED)
 =============================== -->
 <script>
 let adminClick = 0;
-const ADMIN_PASS = "UBED_ADMIN_2026"; // sama dengan token GAS
+let timer = null;
+const ADMIN_PASS = "UBED_ADMIN_2026";
 
-document.getElementById("logoPaddy").addEventListener("click", () => {
+const logo = document.getElementById("logoPaddy");
+
+logo.addEventListener("click", function (e) {
+  e.preventDefault(); // ⛔ STOP REDIRECT
+
   adminClick++;
-  if (adminClick >= 5) {
-    askAdmin();
-    adminClick = 0;
-  }
-});
+  console.log("Logo click:", adminClick);
 
-document.addEventListener("keydown", (e) => {
-  if (e.ctrlKey && e.shiftKey && e.key === "A") {
+  clearTimeout(timer);
+  timer = setTimeout(() => adminClick = 0, 1200);
+
+  if (adminClick === 5) {
+    adminClick = 0;
     askAdmin();
   }
 });

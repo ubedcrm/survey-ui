@@ -2,19 +2,20 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Dashboard Survey Customer</title>
+<title>Dashboard Survey | PaddyID</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 body{
-  font-family:Arial, sans-serif;
+  font-family: Arial, sans-serif;
   background:#f6f7fb;
   margin:0;
   padding:30px
 }
-h1{margin-bottom:10px}
-select{padding:6px}
+h1{margin-bottom:6px}
+select{padding:6px 10px}
 
 .cards{
   display:grid;
@@ -25,16 +26,28 @@ select{padding:6px}
 .card{
   background:#fff;
   padding:20px;
-  border-radius:12px;
-  box-shadow:0 2px 10px rgba(0,0,0,.08);
+  border-radius:14px;
+  box-shadow:0 2px 12px rgba(0,0,0,.08);
   text-align:center
 }
+
+.insight-card{
+  background:#fff;
+  padding:20px;
+  border-radius:14px;
+  box-shadow:0 2px 12px rgba(0,0,0,.08);
+  margin-bottom:20px
+}
+
+.insight-good{color:#2ecc71;font-weight:bold}
+.insight-warn{color:#f1c40f;font-weight:bold}
+.insight-bad{color:#e74c3c;font-weight:bold}
 
 .chart-box{
   background:#fff;
   padding:20px;
-  border-radius:12px;
-  box-shadow:0 2px 10px rgba(0,0,0,.08);
+  border-radius:14px;
+  box-shadow:0 2px 12px rgba(0,0,0,.08);
   margin-bottom:20px
 }
 
@@ -42,13 +55,14 @@ table{
   width:100%;
   border-collapse:collapse;
   background:#fff;
-  border-radius:12px;
+  border-radius:14px;
   overflow:hidden
 }
 th,td{
   padding:10px;
   border-bottom:1px solid #eee;
-  text-align:center
+  text-align:center;
+  font-size:14px
 }
 th{
   background:#ff5ca8;
@@ -60,23 +74,29 @@ th{
 <body>
 
 <h1>📊 Dashboard Survey Customer</h1>
+<p>Data realtime dari Google Sheet</p>
 
 Filter Bulan:
 <select id="bulan"></select>
 
 <div class="cards">
   <div class="card">
-    <h3>Kepuasan Produk</h3>
-    <b id="avgProduk">-</b>
+    <p>Kepuasan Produk</p>
+    <h2 id="avgProduk">-</h2>
   </div>
   <div class="card">
-    <h3>Layanan CS</h3>
-    <b id="avgCS">-</b>
+    <p>Layanan CS</p>
+    <h2 id="avgCS">-</h2>
   </div>
   <div class="card">
-    <h3>Layanan WA</h3>
-    <b id="avgWA">-</b>
+    <p>Layanan WA</p>
+    <h2 id="avgWA">-</h2>
   </div>
+</div>
+
+<div class="insight-card">
+  <h3>📌 Insight Otomatis</h3>
+  <p id="insightText">-</p>
 </div>
 
 <div class="chart-box">
@@ -99,70 +119,136 @@ Filter Bulan:
 </table>
 
 <script>
+/* ===============================
+   KONFIGURASI
+================================ */
 const API_URL =
-"https://script.google.com/macros/s/AKfycbwO6JUOxrskZJ3o9raQOjC9i6vHmSjXa0uve22RSSkSIYt4CTIy9PNPJ2A1wVHSG_a2vw/exec?token=UBED_ADMIN_2026";
+"https://script.google.com/macros/s/AKfycbwO6JUOxrskZJ3o9raQOjC9i6vHmSjXa0uve22RSSkSIYt4CTIy9PNPJ2A1wVHSG_a2vw/exec";
 
 let rawData = [];
 let chart;
 
+/* ===============================
+   FETCH DATA
+================================ */
 fetch(API_URL)
-.then(r => r.json())
-.then(d => {
-  rawData = Array.isArray(d) ? d : [];
-  initFilter();
-  render();
-});
+  .then(r => r.json())
+  .then(res => {
+    rawData = Array.isArray(res) ? res : [];
+    initFilter();
+    render();
+  });
 
+/* ===============================
+   FILTER BULAN
+================================ */
 function initFilter(){
   const sel = document.getElementById("bulan");
   sel.innerHTML = `<option value="all">Semua</option>`;
 
-  [...new Set(rawData.map(x=>{
-    const t = new Date(x.timestamp);
-    return t.getMonth();
-  }))].forEach(m=>{
-    sel.innerHTML += `<option value="${m}">Bulan ${m+1}</option>`;
+  const months = [...new Set(
+    rawData.map(d => new Date(d.timestamp).toISOString().slice(0,7))
+  )];
+
+  months.forEach(m=>{
+    const opt = document.createElement("option");
+    opt.value = m;
+    opt.textContent = m;
+    sel.appendChild(opt);
   });
 
   sel.onchange = render;
 }
 
+/* ===============================
+   RENDER
+================================ */
 function render(){
   const m = document.getElementById("bulan").value;
+
   const data = m==="all"
     ? rawData
-    : rawData.filter(x=>new Date(x.timestamp).getMonth()==m);
+    : rawData.filter(d =>
+        new Date(d.timestamp).toISOString().startsWith(m)
+      );
 
   document.getElementById("avgProduk").innerText = avg(data,"kepuasan_produk");
   document.getElementById("avgCS").innerText = avg(data,"layanan_cs");
   document.getElementById("avgWA").innerText = avg(data,"layanan_wa");
 
-  const tbody = document.getElementById("tbody");
-  tbody.innerHTML="";
-  data.forEach(x=>{
-    tbody.innerHTML += `
-    <tr>
-      <td>${x.nama}</td>
-      <td>${x.hp}</td>
-      <td>${x.alamat}</td>
-      <td>${x.kepuasan_produk}</td>
-      <td>${x.layanan_cs}</td>
-      <td>${x.layanan_wa}</td>
-      <td>${new Date(x.timestamp).toLocaleDateString()}</td>
-    </tr>`;
-  });
-
-  drawChart(data);
+  renderInsight(data);
+  renderTable(data);
+  renderChart(data);
 }
 
+/* ===============================
+   TABLE
+================================ */
+function renderTable(data){
+  const tbody = document.getElementById("tbody");
+  tbody.innerHTML = "";
+
+  data.forEach(d=>{
+    tbody.innerHTML += `
+      <tr>
+        <td>${d.nama}</td>
+        <td>${d.hp}</td>
+        <td>${d.alamat}</td>
+        <td>${d.kepuasan_produk}</td>
+        <td>${d.layanan_cs}</td>
+        <td>${d.layanan_wa}</td>
+        <td>${new Date(d.timestamp).toLocaleDateString()}</td>
+      </tr>
+    `;
+  });
+}
+
+/* ===============================
+   AVERAGE
+================================ */
 function avg(data,key){
   if(!data.length) return "-";
   return (
-    data.reduce((a,b)=>a+Number(b[key]),0) / data.length
+    data.reduce((a,b)=>a+Number(b[key]||0),0) / data.length
   ).toFixed(1);
 }
 
-function drawChart(data){
+/* ===============================
+   INSIGHT OTOMATIS
+================================ */
+function insight(label, value){
+  if(value >= 4.5) return `🟢 ${label} sangat baik`;
+  if(value >= 4)   return `🟡 ${label} cukup baik`;
+  return `🔴 ${label} perlu ditingkatkan`;
+}
+
+function renderInsight(data){
+  const el = document.getElementById("insightText");
+  if(!data.length){
+    el.innerText = "-";
+    return;
+  }
+
+  const p  = avg(data,"kepuasan_produk");
+  const cs = avg(data,"layanan_cs");
+  const wa = avg(data,"layanan_wa");
+
+  let cls = "insight-good";
+  if(p < 4 || cs < 4 || wa < 4) cls = "insight-bad";
+  else if(p < 4.5 || cs < 4.5 || wa < 4.5) cls = "insight-warn";
+
+  el.className = cls;
+  el.innerHTML = [
+    insight("Produk", p),
+    insight("CS", cs),
+    insight("WA", wa)
+  ].join("<br>");
+}
+
+/* ===============================
+   CHART (TIPIS)
+================================ */
+function renderChart(data){
   const ctx = document.getElementById("chart");
   if(chart) chart.destroy();
 
@@ -177,21 +263,15 @@ function drawChart(data){
           avg(data,"layanan_wa")
         ],
         backgroundColor:["#ff5ca8","#ff8ac1","#ffc0dd"],
-        barThickness: 22,        // 🔥 TIPIS
+        barThickness: 22,
         maxBarThickness: 28,
         borderRadius: 8
       }]
     },
     options:{
-      responsive:true,
-      plugins:{
-        legend:{display:false}
-      },
+      plugins:{ legend:{display:false} },
       scales:{
-        y:{
-          beginAtZero:true,
-          max:5
-        }
+        y:{ beginAtZero:true, max:5 }
       }
     }
   });

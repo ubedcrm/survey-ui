@@ -15,13 +15,9 @@ body {
   padding: 30px;
 }
 
-h1 {
-  margin-bottom: 8px;
-}
+h1 { margin-bottom: 4px; }
 
-.filter {
-  margin: 20px 0;
-}
+.filter { margin: 20px 0; }
 
 select {
   padding: 8px 12px;
@@ -68,9 +64,7 @@ th, td {
   font-size: 14px;
 }
 
-th {
-  background: #fafafa;
-}
+th { background: #fafafa; }
 
 canvas {
   background: #fff;
@@ -109,7 +103,6 @@ canvas {
 </div>
 
 <canvas id="chart" height="120"></canvas>
-
 <br>
 
 <div class="table-wrap">
@@ -130,7 +123,8 @@ canvas {
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbykkMnmYEaD1-sVQWpMgBRyxapVrl88ykFwqw1N_xF8_iUmMJCiNtJj7TwbxbjZBaZ4XA/exec";
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbykkMnmYEaD1-sVQWpMgBRyxapVrl88ykFwqw1N_xF8_iUmMJCiNtJj7TwbxbjZBaZ4XA/exec?action=survey";
 
 let rawData = [];
 let chart;
@@ -138,13 +132,20 @@ let chart;
 fetch(API_URL)
   .then(res => res.json())
   .then(data => {
+    if (data.error) {
+      alert("Akses ditolak. Login pakai email admin.");
+      return;
+    }
     rawData = data;
     initMonthFilter(data);
     render(data);
   });
 
-function initMonthFilter(data){
-  const months = [...new Set(data.map(d => d.Tanggal?.slice(0,7)))].filter(Boolean);
+function initMonthFilter(data) {
+  const months = [...new Set(
+    data.map(d => new Date(d.Timestamp).toISOString().slice(0,7))
+  )];
+
   const select = document.getElementById("monthFilter");
 
   months.forEach(m => {
@@ -156,18 +157,23 @@ function initMonthFilter(data){
 
   select.onchange = () => {
     const val = select.value;
-    const filtered = val === "all" ? rawData : rawData.filter(d => d.Tanggal.startsWith(val));
+    const filtered =
+      val === "all"
+        ? rawData
+        : rawData.filter(d =>
+            new Date(d.Timestamp).toISOString().startsWith(val)
+          );
     render(filtered);
   };
 }
 
-function render(data){
+function render(data) {
   renderTable(data);
   renderStats(data);
   renderChart(data);
 }
 
-function renderTable(data){
+function renderTable(data) {
   const tbody = document.querySelector("#dataTable tbody");
   tbody.innerHTML = "";
   data.forEach(d => {
@@ -179,30 +185,33 @@ function renderTable(data){
         <td>${d.kepuasan_produk}</td>
         <td>${d.layanan_cs}</td>
         <td>${d.layanan_wa}</td>
-        <td>${new Date(d.timestamp).toLocaleDateString()}</td>
-      </tr>`;
+        <td>${new Date(d.Timestamp).toLocaleDateString()}</td>
+      </tr>
+    `;
   });
 }
 
-function avg(data, key){
-  if(!data.length) return 0;
-  return (data.reduce((a,b)=>a+Number(b[key]||0),0)/data.length).toFixed(1);
+function avg(data, key) {
+  if (!data.length) return "-";
+  return (
+    data.reduce((a, b) => a + Number(b[key] || 0), 0) / data.length
+  ).toFixed(1);
 }
 
-function renderStats(data){
+function renderStats(data) {
   document.getElementById("avgProduk").textContent = avg(data,"kepuasan_produk");
   document.getElementById("avgCS").textContent = avg(data,"layanan_cs");
   document.getElementById("avgWA").textContent = avg(data,"layanan_wa");
 }
 
-function renderChart(data){
+function renderChart(data) {
   const values = [
     avg(data,"kepuasan_produk"),
     avg(data,"layanan_cs"),
     avg(data,"layanan_wa")
   ];
 
-  if(chart) chart.destroy();
+  if (chart) chart.destroy();
 
   chart = new Chart(document.getElementById("chart"), {
     type: "bar",

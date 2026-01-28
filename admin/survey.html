@@ -1,106 +1,153 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Admin Dashboard | Survey</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Admin Dashboard | Survey</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      font-family: Arial, system-ui, sans-serif;
-      background: #f8f8f8;
-      padding: 20px;
-    }
+<style>
+body {
+  font-family: Arial, system-ui, sans-serif;
+  background:#f6f6f6;
+  padding:20px;
+}
 
-    h1 {
-      margin-bottom: 16px;
-    }
+h1 { margin-bottom:10px; }
 
-    .error {
-      color: red;
-      font-weight: bold;
-    }
+.filter {
+  margin-bottom:20px;
+}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: white;
-    }
+.stats {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+  margin-bottom:24px;
+}
 
-    th, td {
-      padding: 10px;
-      border: 1px solid #ddd;
-      font-size: 14px;
-      text-align: left;
-    }
+.stat {
+  background:#fff;
+  padding:16px;
+  border-radius:12px;
+  text-align:center;
+}
 
-    th {
-      background: #ff5ca8;
-      color: white;
-      position: sticky;
-      top: 0;
-    }
+.stat h2 {
+  font-size:32px;
+  color:#ff5ca8;
+}
 
-    tr:nth-child(even) {
-      background: #fafafa;
-    }
-  </style>
+canvas {
+  background:#fff;
+  padding:16px;
+  border-radius:12px;
+  margin-bottom:24px;
+}
+
+table {
+  width:100%;
+  border-collapse:collapse;
+  background:#fff;
+}
+
+th,td {
+  padding:8px;
+  border:1px solid #ddd;
+  font-size:13px;
+}
+
+th {
+  background:#ff5ca8;
+  color:#fff;
+}
+</style>
 </head>
+
 <body>
 
-<h1>📊 Data Survey Customer</h1>
-<p id="status">Loading data...</p>
+<h1>📊 Dashboard Survey</h1>
 
-<table id="surveyTable" style="display:none;">
+<div class="filter">
+  Filter bulan:
+  <input type="month" id="monthPicker">
+  <button onclick="loadData()">Terapkan</button>
+</div>
+
+<div class="stats">
+  <div class="stat"><p>Total Respon</p><h2 id="total">0</h2></div>
+  <div class="stat"><p>Rata² Produk</p><h2 id="avgProduk">0</h2></div>
+  <div class="stat"><p>Rata² CS</p><h2 id="avgCS">0</h2></div>
+  <div class="stat"><p>Rata² WA</p><h2 id="avgWA">0</h2></div>
+</div>
+
+<canvas id="chart" height="140"></canvas>
+
+<table>
   <thead></thead>
   <tbody></tbody>
 </table>
 
 <script>
-const GAS_URL =
+const BASE_URL =
 "https://script.google.com/macros/s/AKfycbykkMnmYEaD1-sVQWpMgBRyxapVrl88ykFwqw1N_xF8_iUmMJCiNtJj7TwbxbjZBaZ4XA/exec?action=getSurvey&token=UBED_ADMIN_2026";
 
-fetch(GAS_URL)
-  .then(res => res.json())
-  .then(data => {
-    if (data.status === "error") {
-      document.getElementById("status").innerHTML =
-        "<span class='error'>Akses ditolak.</span>";
-      return;
-    }
+const ctx = document.getElementById("chart").getContext("2d");
 
-    if (!data.length) {
-      document.getElementById("status").innerText = "Belum ada data.";
-      return;
-    }
+function loadData(){
+  const m = document.getElementById("monthPicker").value;
+  fetch(m ? BASE_URL+"&month="+m : BASE_URL)
+    .then(r=>r.json())
+    .then(d=>render(d));
+}
 
-    const table = document.getElementById("surveyTable");
-    const thead = table.querySelector("thead");
-    const tbody = table.querySelector("tbody");
+function render(data){
+  if(!data.length) return;
 
-    thead.innerHTML =
-      "<tr>" +
-      Object.keys(data[0]).map(k => `<th>${k}</th>`).join("") +
-      "</tr>";
+  document.getElementById("total").innerText = data.length;
 
-    data.forEach(row => {
-      const tr = document.createElement("tr");
-      Object.values(row).forEach(val => {
-        const td = document.createElement("td");
-        td.textContent = val;
-        tr.appendChild(td);
-      });
-      tbody.appendChild(tr);
-    });
+  const avg = k => (data.reduce((s,r)=>s+Number(r[k]||0),0)/data.length).toFixed(1);
 
-    document.getElementById("status").style.display = "none";
-    table.style.display = "table";
-  })
-  .catch(err => {
-    document.getElementById("status").innerHTML =
-      "<span class='error'>Gagal load data</span>";
-    console.error(err);
+  const p = avg("kepuasan_produk");
+  const cs = avg("layanan_cs");
+  const wa = avg("layanan_wa");
+
+  avgProduk.innerText = p;
+  avgCS.innerText = cs;
+  avgWA.innerText = wa;
+
+  drawChart([p,cs,wa]);
+  renderTable(data);
+}
+
+function drawChart(vals){
+  ctx.clearRect(0,0,500,200);
+  const labels=["Produk","CS","WA"];
+  vals.forEach((v,i)=>{
+    ctx.fillStyle="#ff5ca8";
+    ctx.fillRect(80+i*120,150-v*20,40,v*20);
+    ctx.fillStyle="#000";
+    ctx.fillText(labels[i],70+i*120,170);
+    ctx.fillText(v,82+i*120,140-v*20);
   });
+}
+
+function renderTable(data){
+  const thead=document.querySelector("thead");
+  const tbody=document.querySelector("tbody");
+  thead.innerHTML="<tr>"+Object.keys(data[0]).map(k=>`<th>${k}</th>`).join("")+"</tr>";
+  tbody.innerHTML="";
+  data.forEach(r=>{
+    const tr=document.createElement("tr");
+    Object.values(r).forEach(v=>{
+      const td=document.createElement("td");
+      td.textContent=v;
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+}
+
+loadData();
 </script>
 
 </body>

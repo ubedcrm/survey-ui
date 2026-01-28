@@ -31,19 +31,18 @@ select{padding:6px 10px}
   text-align:center
 }
 
-/* INSIGHT */
-#insightBox{
+.insight-card{
   background:#fff;
   padding:20px;
   border-radius:14px;
   box-shadow:0 2px 12px rgba(0,0,0,.08);
   margin-bottom:20px
 }
+
 .insight-good{color:#2ecc71;font-weight:bold}
 .insight-warn{color:#f1c40f;font-weight:bold}
 .insight-bad{color:#e74c3c;font-weight:bold}
 
-/* CHART */
 .chart-box{
   background:#fff;
   padding:20px;
@@ -52,7 +51,6 @@ select{padding:6px 10px}
   margin-bottom:20px
 }
 
-/* TABLE */
 table{
   width:100%;
   border-collapse:collapse;
@@ -76,6 +74,7 @@ th{
 <body>
 
 <h1>📊 Dashboard Survey Customer</h1>
+<p>Data realtime dari Google Sheet</p>
 
 Filter Bulan:
 <select id="bulan"></select>
@@ -95,8 +94,7 @@ Filter Bulan:
   </div>
 </div>
 
-<!-- INSIGHT -->
-<div id="insightBox">
+<div class="insight-card">
   <h3>📌 Insight Otomatis</h3>
   <p id="insightText">-</p>
 </div>
@@ -122,7 +120,7 @@ Filter Bulan:
 
 <script>
 /* ===============================
-   CONFIG
+   KONFIGURASI
 ================================ */
 const API_URL =
 "https://script.google.com/macros/s/AKfycbwO6JUOxrskZJ3o9raQOjC9i6vHmSjXa0uve22RSSkSIYt4CTIy9PNPJ2A1wVHSG_a2vw/exec";
@@ -153,10 +151,10 @@ function initFilter(){
   )];
 
   months.forEach(m=>{
-    const o = document.createElement("option");
-    o.value = m;
-    o.textContent = m;
-    sel.appendChild(o);
+    const opt = document.createElement("option");
+    opt.value = m;
+    opt.textContent = m;
+    sel.appendChild(opt);
   });
 
   sel.onchange = render;
@@ -167,6 +165,7 @@ function initFilter(){
 ================================ */
 function render(){
   const m = document.getElementById("bulan").value;
+
   const data = m==="all"
     ? rawData
     : rawData.filter(d =>
@@ -179,7 +178,7 @@ function render(){
 
   renderInsight(data);
   renderTable(data);
-  drawChart(data);
+  renderChart(data);
 }
 
 /* ===============================
@@ -187,7 +186,8 @@ function render(){
 ================================ */
 function renderTable(data){
   const tbody = document.getElementById("tbody");
-  tbody.innerHTML="";
+  tbody.innerHTML = "";
+
   data.forEach(d=>{
     tbody.innerHTML += `
       <tr>
@@ -209,16 +209,16 @@ function renderTable(data){
 function avg(data,key){
   if(!data.length) return "-";
   return (
-    data.reduce((a,b)=>a+Number(b[key]||0),0)/data.length
+    data.reduce((a,b)=>a+Number(b[key]||0),0) / data.length
   ).toFixed(1);
 }
 
 /* ===============================
-   INSIGHT
+   INSIGHT OTOMATIS
 ================================ */
-function insight(label,val){
-  if(val>=4.5) return `🟢 ${label} sangat baik`;
-  if(val>=4) return `🟡 ${label} cukup baik`;
+function insight(label, value){
+  if(value >= 4.5) return `🟢 ${label} sangat baik`;
+  if(value >= 4)   return `🟡 ${label} cukup baik`;
   return `🔴 ${label} perlu ditingkatkan`;
 }
 
@@ -229,26 +229,26 @@ function renderInsight(data){
     return;
   }
 
-  const p = avg(data,"kepuasan_produk");
+  const p  = avg(data,"kepuasan_produk");
   const cs = avg(data,"layanan_cs");
   const wa = avg(data,"layanan_wa");
 
   let cls = "insight-good";
-  if(p<4 || cs<4 || wa<4) cls="insight-bad";
-  else if(p<4.5 || cs<4.5 || wa<4.5) cls="insight-warn";
+  if(p < 4 || cs < 4 || wa < 4) cls = "insight-bad";
+  else if(p < 4.5 || cs < 4.5 || wa < 4.5) cls = "insight-warn";
 
   el.className = cls;
   el.innerHTML = [
-    insight("Produk",p),
-    insight("CS",cs),
-    insight("WA",wa)
+    insight("Produk", p),
+    insight("CS", cs),
+    insight("WA", wa)
   ].join("<br>");
 }
 
 /* ===============================
    CHART (TIPIS)
 ================================ */
-function drawChart(data){
+function renderChart(data){
   const ctx = document.getElementById("chart");
   if(chart) chart.destroy();
 
@@ -263,15 +263,15 @@ function drawChart(data){
           avg(data,"layanan_wa")
         ],
         backgroundColor:["#ff5ca8","#ff8ac1","#ffc0dd"],
-        barThickness:22,
-        maxBarThickness:28,
-        borderRadius:8
+        barThickness: 22,
+        maxBarThickness: 28,
+        borderRadius: 8
       }]
     },
     options:{
-      plugins:{legend:{display:false}},
+      plugins:{ legend:{display:false} },
       scales:{
-        y:{beginAtZero:true,max:5}
+        y:{ beginAtZero:true, max:5 }
       }
     }
   });

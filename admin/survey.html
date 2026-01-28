@@ -2,152 +2,224 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Admin Dashboard | Survey</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard | PaddyID</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 body {
-  font-family: Arial, system-ui, sans-serif;
-  background:#f6f6f6;
-  padding:20px;
+  font-family: Arial, sans-serif;
+  background: #f6f7fb;
+  margin: 0;
+  padding: 30px;
 }
 
-h1 { margin-bottom:10px; }
+h1 {
+  margin-bottom: 8px;
+}
 
 .filter {
-  margin-bottom:20px;
+  margin: 20px 0;
 }
 
-.stats {
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:16px;
-  margin-bottom:24px;
+select {
+  padding: 8px 12px;
+  font-size: 14px;
 }
 
-.stat {
-  background:#fff;
-  padding:16px;
-  border-radius:12px;
-  text-align:center;
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
 }
 
-.stat h2 {
-  font-size:32px;
-  color:#ff5ca8;
+.card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+  text-align: center;
 }
 
-canvas {
-  background:#fff;
-  padding:16px;
-  border-radius:12px;
-  margin-bottom:24px;
+.card h2 {
+  margin: 0;
+  font-size: 32px;
+  color: #ff5ca8;
+}
+
+.table-wrap {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+  overflow-x: auto;
 }
 
 table {
-  width:100%;
-  border-collapse:collapse;
-  background:#fff;
+  width: 100%;
+  border-collapse: collapse;
 }
 
-th,td {
-  padding:8px;
-  border:1px solid #ddd;
-  font-size:13px;
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
 }
 
 th {
-  background:#ff5ca8;
-  color:#fff;
+  background: #fafafa;
+}
+
+canvas {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
 }
 </style>
 </head>
 
 <body>
 
-<h1>📊 Dashboard Survey</h1>
+<h1>📊 Dashboard Survey Customer</h1>
+<p>Data realtime dari Google Sheet</p>
 
 <div class="filter">
-  Filter bulan:
-  <input type="month" id="monthPicker">
-  <button onclick="loadData()">Terapkan</button>
+  Filter Bulan:
+  <select id="monthFilter">
+    <option value="all">Semua</option>
+  </select>
 </div>
 
-<div class="stats">
-  <div class="stat"><p>Total Respon</p><h2 id="total">0</h2></div>
-  <div class="stat"><p>Rata² Produk</p><h2 id="avgProduk">0</h2></div>
-  <div class="stat"><p>Rata² CS</p><h2 id="avgCS">0</h2></div>
-  <div class="stat"><p>Rata² WA</p><h2 id="avgWA">0</h2></div>
+<div class="cards">
+  <div class="card">
+    <p>Kepuasan Produk</p>
+    <h2 id="avgProduk">-</h2>
+  </div>
+  <div class="card">
+    <p>Layanan CS</p>
+    <h2 id="avgCS">-</h2>
+  </div>
+  <div class="card">
+    <p>Layanan WA</p>
+    <h2 id="avgWA">-</h2>
+  </div>
 </div>
 
-<canvas id="chart" height="140"></canvas>
+<canvas id="chart" height="120"></canvas>
 
-<table>
-  <thead></thead>
-  <tbody></tbody>
-</table>
+<br>
+
+<div class="table-wrap">
+  <table id="dataTable">
+    <thead>
+      <tr>
+        <th>Nama</th>
+        <th>HP</th>
+        <th>Alamat</th>
+        <th>Produk</th>
+        <th>CS</th>
+        <th>WA</th>
+        <th>Tanggal</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
 
 <script>
-const BASE_URL =
-"https://script.google.com/macros/s/AKfycbykkMnmYEaD1-sVQWpMgBRyxapVrl88ykFwqw1N_xF8_iUmMJCiNtJj7TwbxbjZBaZ4XA/exec?action=getSurvey&token=UBED_ADMIN_2026";
+const API_URL = "https://script.google.com/macros/s/AKfycbykkMnmYEaD1-sVQWpMgBRyxapVrl88ykFwqw1N_xF8_iUmMJCiNtJj7TwbxbjZBaZ4XA/exec";
 
-const ctx = document.getElementById("chart").getContext("2d");
+let rawData = [];
+let chart;
 
-function loadData(){
-  const m = document.getElementById("monthPicker").value;
-  fetch(m ? BASE_URL+"&month="+m : BASE_URL)
-    .then(r=>r.json())
-    .then(d=>render(d));
+fetch(API_URL)
+  .then(res => res.json())
+  .then(data => {
+    rawData = data;
+    initMonthFilter(data);
+    render(data);
+  });
+
+function initMonthFilter(data){
+  const months = [...new Set(data.map(d => d.Tanggal?.slice(0,7)))].filter(Boolean);
+  const select = document.getElementById("monthFilter");
+
+  months.forEach(m => {
+    const opt = document.createElement("option");
+    opt.value = m;
+    opt.textContent = m;
+    select.appendChild(opt);
+  });
+
+  select.onchange = () => {
+    const val = select.value;
+    const filtered = val === "all" ? rawData : rawData.filter(d => d.Tanggal.startsWith(val));
+    render(filtered);
+  };
 }
 
 function render(data){
-  if(!data.length) return;
-
-  document.getElementById("total").innerText = data.length;
-
-  const avg = k => (data.reduce((s,r)=>s+Number(r[k]||0),0)/data.length).toFixed(1);
-
-  const p = avg("kepuasan_produk");
-  const cs = avg("layanan_cs");
-  const wa = avg("layanan_wa");
-
-  avgProduk.innerText = p;
-  avgCS.innerText = cs;
-  avgWA.innerText = wa;
-
-  drawChart([p,cs,wa]);
   renderTable(data);
-}
-
-function drawChart(vals){
-  ctx.clearRect(0,0,500,200);
-  const labels=["Produk","CS","WA"];
-  vals.forEach((v,i)=>{
-    ctx.fillStyle="#ff5ca8";
-    ctx.fillRect(80+i*120,150-v*20,40,v*20);
-    ctx.fillStyle="#000";
-    ctx.fillText(labels[i],70+i*120,170);
-    ctx.fillText(v,82+i*120,140-v*20);
-  });
+  renderStats(data);
+  renderChart(data);
 }
 
 function renderTable(data){
-  const thead=document.querySelector("thead");
-  const tbody=document.querySelector("tbody");
-  thead.innerHTML="<tr>"+Object.keys(data[0]).map(k=>`<th>${k}</th>`).join("")+"</tr>";
-  tbody.innerHTML="";
-  data.forEach(r=>{
-    const tr=document.createElement("tr");
-    Object.values(r).forEach(v=>{
-      const td=document.createElement("td");
-      td.textContent=v;
-      tr.appendChild(td);
-    });
-    tbody.appendChild(tr);
+  const tbody = document.querySelector("#dataTable tbody");
+  tbody.innerHTML = "";
+  data.forEach(d => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${d.nama}</td>
+        <td>${d.hp}</td>
+        <td>${d.alamat}</td>
+        <td>${d.kepuasan_produk}</td>
+        <td>${d.layanan_cs}</td>
+        <td>${d.layanan_wa}</td>
+        <td>${new Date(d.timestamp).toLocaleDateString()}</td>
+      </tr>`;
   });
 }
 
-loadData();
+function avg(data, key){
+  if(!data.length) return 0;
+  return (data.reduce((a,b)=>a+Number(b[key]||0),0)/data.length).toFixed(1);
+}
+
+function renderStats(data){
+  document.getElementById("avgProduk").textContent = avg(data,"kepuasan_produk");
+  document.getElementById("avgCS").textContent = avg(data,"layanan_cs");
+  document.getElementById("avgWA").textContent = avg(data,"layanan_wa");
+}
+
+function renderChart(data){
+  const values = [
+    avg(data,"kepuasan_produk"),
+    avg(data,"layanan_cs"),
+    avg(data,"layanan_wa")
+  ];
+
+  if(chart) chart.destroy();
+
+  chart = new Chart(document.getElementById("chart"), {
+    type: "bar",
+    data: {
+      labels: ["Produk","CS","WA"],
+      datasets: [{
+        data: values,
+        backgroundColor: "#ff5ca8"
+      }]
+    },
+    options: {
+      scales: {
+        y: { beginAtZero: true, max: 5 }
+      }
+    }
+  });
+}
 </script>
 
 </body>

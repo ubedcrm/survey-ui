@@ -10,7 +10,7 @@
 
 <!-- NAVBAR -->
 <header class="navbar">
-  <div class="logo">
+  <div class="logo" id="logoPaddy">
     <a href="https://ubedcrm.github.io/survey-ui/">PaddyID</a>
   </div>
   <nav>
@@ -24,7 +24,7 @@
 <section class="hero-wrapper">
   <div class="hero-card hero-fix">
 
-    <!-- TEXT (SUBTITLE DIPINDAH KE BAWAH PADDY) -->
+    <!-- TEXT -->
     <div class="hero-text">
       <h1 class="hero-title">Paddy</h1>
 
@@ -36,7 +36,7 @@
       <a href="products.html" class="hero-btn">Shop Now</a>
     </div>
 
-    <!-- SLIDER (TETAP) -->
+    <!-- SLIDER -->
     <div class="hero-slider">
       <div class="slider" id="heroSlider">
         <div class="slide active"><img src="images/hero-1.png" alt=""></div>
@@ -61,7 +61,7 @@
   © 2026 PaddyID. All rights reserved.
 </footer>
 
-<!-- USP BAR (PALING BAWAH) -->
+<!-- USP BAR -->
 <section class="usp-bar">
   <div class="usp-row">
 
@@ -127,6 +127,37 @@
     current = (current + 1) % slides.length;
     showSlide(current);
   }, 4000);
+</script>
+
+<!-- ===============================
+     ADMIN ACCESS (TERSEMBUNYI)
+=============================== -->
+<script>
+let adminClick = 0;
+const ADMIN_PASS = "UBED_ADMIN_2026"; // sama dengan token GAS
+
+document.getElementById("logoPaddy").addEventListener("click", () => {
+  adminClick++;
+  if (adminClick >= 5) {
+    askAdmin();
+    adminClick = 0;
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.ctrlKey && e.shiftKey && e.key === "A") {
+    askAdmin();
+  }
+});
+
+function askAdmin() {
+  const pass = prompt("Admin password:");
+  if (pass === ADMIN_PASS) {
+    window.location.href = "admin/survey.html";
+  } else {
+    alert("Akses ditolak ❌");
+  }
+}
 </script>
 
 </body>

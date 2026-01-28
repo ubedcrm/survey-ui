@@ -58,14 +58,14 @@
 
 <script>
 const GAS_URL =
-"https://script.google.com/macros/s/AKfycbykkMnmYEaD1-sVQWpMgBRyxapVrl88ykFwqw1N_xF8_iUmMJCiNtJj7TwbxbjZBaZ4XA/exec?action=getSurvey";
+"https://script.google.com/macros/s/AKfycbykkMnmYEaD1-sVQWpMgBRyxapVrl88ykFwqw1N_xF8_iUmMJCiNtJj7TwbxbjZBaZ4XA/exec?action=getSurvey&token=UBED_ADMIN_2026";
 
 fetch(GAS_URL)
   .then(res => res.json())
   .then(data => {
     if (data.status === "error") {
       document.getElementById("status").innerHTML =
-        "<span class='error'>Akses ditolak. Login pakai email admin.</span>";
+        "<span class='error'>Akses ditolak.</span>";
       return;
     }
 

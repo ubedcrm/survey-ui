@@ -215,17 +215,34 @@ function renderChart(data){
     data:{
       labels:["Produk","CS","WA"],
       datasets:[{
+        label: "Rata-rata Penilaian",
         data:[
           avg(data,"kepuasan_produk"),
           avg(data,"layanan_cs"),
           avg(data,"layanan_wa")
         ],
-        backgroundColor:["#ff5ca8","#ff8ac1","#ffc0dd"]
+        backgroundColor:["#ff5ca8","#ff8ac1","#ffc0dd"],
+
+        // 🔥 INI YANG NGEGENDUTIN BAR (SEKARANG DIPERKECIL)
+        barThickness: 40,
+        maxBarThickness: 50,
+        borderRadius: 8
       }]
     },
     options:{
+      responsive: true,
+      plugins:{
+        legend:{ display:false }
+      },
       scales:{
-        y:{beginAtZero:true,max:5}
+        y:{
+          beginAtZero:true,
+          max:5,
+          ticks:{ stepSize:1 }
+        },
+        x:{
+          grid:{ display:false }
+        }
       }
     }
   });

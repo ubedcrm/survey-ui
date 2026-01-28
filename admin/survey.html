@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard | Survey</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial, system-ui, sans-serif;
+      background: #f8f8f8;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 16px;
+    }
+
+    .error {
+      color: red;
+      font-weight: bold;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+      text-align: left;
+    }
+
+    th {
+      background: #ff5ca8;
+      color: white;
+      position: sticky;
+      top: 0;
+    }
+
+    tr:nth-child(even) {
+      background: #fafafa;
+    }
+  </style>
+</head>
+<body>
+
+<h1>📊 Data Survey Customer</h1>
+<p id="status">Loading data...</p>
+
+<table id="surveyTable" style="display:none;">
+  <thead></thead>
+  <tbody></tbody>
+</table>
+
+<script>
+const GAS_URL =
+"https://script.google.com/macros/s/AKfycbykkMnmYEaD1-sVQWpMgBRyxapVrl88ykFwqw1N_xF8_iUmMJCiNtJj7TwbxbjZBaZ4XA/exec?action=getSurvey";
+
+fetch(GAS_URL)
+  .then(res => res.json())
+  .then(data => {
+    if (data.status === "error") {
+      document.getElementById("status").innerHTML =
+        "<span class='error'>Akses ditolak. Login pakai email admin.</span>";
+      return;
+    }
+
+    if (!data.length) {
+      document.getElementById("status").innerText = "Belum ada data.";
+      return;
+    }
+
+    const table = document.getElementById("surveyTable");
+    const thead = table.querySelector("thead");
+    const tbody = table.querySelector("tbody");
+
+    thead.innerHTML =
+      "<tr>" +
+      Object.keys(data[0]).map(k => `<th>${k}</th>`).join("") +
+      "</tr>";
+
+    data.forEach(row => {
+      const tr = document.createElement("tr");
+      Object.values(row).forEach(val => {
+        const td = document.createElement("td");
+        td.textContent = val;
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+
+    document.getElementById("status").style.display = "none";
+    table.style.display = "table";
+  })
+  .catch(err => {
+    document.getElementById("status").innerHTML =
+      "<span class='error'>Gagal load data</span>";
+    console.error(err);
+  });
+</script>
+
+</body>
+</html>

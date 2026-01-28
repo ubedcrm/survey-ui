@@ -106,24 +106,24 @@
 =============================== -->
 <script>
 let adminClick = 0;
-let timer = null;
 const ADMIN_PASS = "UBED_ADMIN_2026";
-
 const logo = document.getElementById("logoPaddy");
 
 logo.addEventListener("click", function (e) {
-  e.preventDefault(); // ⛔ STOP REDIRECT
+  e.preventDefault(); // stop redirect
 
   adminClick++;
   console.log("Logo click:", adminClick);
-
-  clearTimeout(timer);
-  timer = setTimeout(() => adminClick = 0, 1200);
 
   if (adminClick === 5) {
     adminClick = 0;
     askAdmin();
   }
+
+  // reset otomatis kalau user berhenti klik
+  setTimeout(() => {
+    adminClick = 0;
+  }, 3000);
 });
 
 function askAdmin() {
@@ -138,3 +138,4 @@ function askAdmin() {
 
 </body>
 </html>
+

@@ -9,12 +9,12 @@
 
 <style>
 body{
-  font-family: Arial, sans-serif;
+  font-family:Arial;
   background:#f6f7fb;
   margin:0;
   padding:30px
 }
-h1{margin-bottom:6px}
+h1{margin-bottom:5px}
 select{padding:6px 10px}
 
 .cards{
@@ -101,7 +101,7 @@ Filter Bulan:
 
 <script>
 /* ===============================
-   KONFIGURASI
+   CONFIG
 ================================ */
 const API_URL =
 "https://script.google.com/macros/s/AKfycbwO6JUOxrskZJ3o9raQOjC9i6vHmSjXa0uve22RSSkSIYt4CTIy9PNPJ2A1wVHSG_a2vw/exec";
@@ -110,13 +110,16 @@ let rawData = [];
 let chart;
 
 /* ===============================
-   FETCH DATA
+   FETCH DATA (FIXED)
 ================================ */
 fetch(API_URL)
   .then(r => r.json())
-  .then(data => {
-    console.log("DATA DARI GAS:", data);
-    rawData = data;
+  .then(res => {
+    console.log("RESPONSE GAS:", res);
+
+    // 🔥 INI KUNCINYA
+    rawData = Array.isArray(res) ? res : (res.data || []);
+
     initFilter();
     render();
   })
@@ -133,7 +136,9 @@ function initFilter(){
   sel.innerHTML = `<option value="all">Semua</option>`;
 
   const months = [...new Set(
-    rawData.map(d => new Date(d.timestamp).toISOString().slice(0,7))
+    rawData.map(d =>
+      new Date(d.timestamp).toISOString().slice(0,7)
+    )
   )];
 
   months.forEach(m => {
@@ -147,7 +152,7 @@ function initFilter(){
 }
 
 /* ===============================
-   RENDER SEMUA
+   RENDER
 ================================ */
 function render(){
   const m = document.getElementById("bulan").value;
